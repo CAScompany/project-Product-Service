@@ -1,20 +1,23 @@
 name: Product-Service
 on: workflow_dispatch
+env:
+  CODE_DIR: 'products-service'
 jobs:
   Testing:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.CODE_DIR }}
+
     steps:
       - name: Code checkout 
         uses: actions/checkout@v4
-#        with:
-#          path: 'products-service'
+        with:
+          path: ${{ env.CODE_DIR }}
+
       - name: Maven test 
-        run: |
-          cd products-service          
-          mvn test 
+        run: mvn test 
 
       - name: Checkstyle
-        run: |
-          cd products-service
-          mvn checkstyle:checkstyle 
+        run: mvn checkstyle:checkstyle 
 
