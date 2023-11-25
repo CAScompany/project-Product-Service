@@ -31,16 +31,15 @@ jobs:
         uses: warchant/setup-sonar-scanner@v7
     # Run sonar-scanner
       - name: SonarQube Scan
-        run: |
-          sonar-scanner
-            -Dsonar.host.url= "https://sonarcloud.io"
-            -Dsonar.login= "07d772e3f32bbafb5a010e1a6de2ded247c9891d"
-            -Dsonar.organization="cascompany"
-            -Dsonar.projectKey="project-Product-Service"
-            -Dsonar.sources=src/
-            -Dsonar,junit.reportsPath=target/checckstyle-result.xml
-            -Dsonar,jacoco.reportsPath0tarjet/jacoco.exec
-            -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
-            -Dsonar.java.binaries=target/test-classes/com/visualpathit/account
-#           -Dsonar.sources=$GITHUB_WORKSPACE          
+        run: sonar-scanner
+             -Dsonar.host.url= "https://sonarcloud.io"
+             -Dsonar.login= "07d772e3f32bbafb5a010e1a6de2ded247c9891d"
+             -Dsonar.organization="cascompany"
+             -Dsonar.projectKey="project-Product-Service"
+             -Dsonar.sources=src/
+             -Dsonar,junit.reportsPath=target/checckstyle-result.xml
+             -Dsonar,jacoco.reportsPath0tarjet/jacoco.exec
+             -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
+             -Dsonar.java.binaries=target/test-classes/com/visualpathit/account
+  #          -Dsonar.sources=$GITHUB_WORKSPACE          
 
