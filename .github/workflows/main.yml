@@ -20,6 +20,7 @@ jobs:
       - name: Checkstyle
         run: mvn checkstyle:checkstyle 
 
+ # Setup java 17 to be default (sonar-scanner requirement as of 5.x)
       - name: Setup Java 11
         uses: actions/setup-java@v3
         with:
@@ -32,14 +33,14 @@ jobs:
       - name: SonarQube Scan
         run: |
           sonar-scanner
-           -Dsonar.host.url=${{ secrets.SONAR_URL }}
-           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-           -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-           -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-           -Dsonar.sources=src/
-           -Dsonar,junit.reportsPath=target/checckstyle-result.xml
-           -Dsonar,jacoco.reportsPath0tarjet/jacoco.exec
-           -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
-#           -Dsonar.java.binaries=target/test-classes/com/visualpathit/account
+            -Dsonar.host.url= "https://sonarcloud.io"
+            -Dsonar.login= "07d772e3f32bbafb5a010e1a6de2ded247c9891d"
+            -Dsonar.organization="cascompany"
+            -Dsonar.projectKey="project-Product-Service"
+            -Dsonar.sources=src/
+            -Dsonar,junit.reportsPath=target/checckstyle-result.xml
+            -Dsonar,jacoco.reportsPath0tarjet/jacoco.exec
+            -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
+            -Dsonar.java.binaries=target/test-classes/com/visualpathit/account
 #           -Dsonar.sources=$GITHUB_WORKSPACE          
-      
+
