@@ -36,7 +36,7 @@ jobs:
              -Dsonar.login=${{ secrets.SONAR_TOKEN }}
              -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
              -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-             -Dsonar.sources=src/
+             -Dsonar.sources=${{ env.CODE_DIR }}/src/
              -Dsonar,junit.reportsPath=target/checckstyle-result.xml
              -Dsonar,jacoco.reportsPath0tarjet/jacoco.exec
              -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
