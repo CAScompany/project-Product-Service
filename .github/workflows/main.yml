@@ -1,5 +1,5 @@
 name: Product-Service
-on: workflow_dispatch
+on: [push, workflow_dispatch]
 env:
   CODE_DIR: products-service
 jobs:
