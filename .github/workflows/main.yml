@@ -32,10 +32,10 @@ jobs:
     # Run sonar-scanner
       - name: SonarQube Scan
         run: sonar-scanner
-             -Dsonar.host.url= "https://sonarcloud.io"
-             -Dsonar.login= "07d772e3f32bbafb5a010e1a6de2ded247c9891d"
-             -Dsonar.organization="cascompany"
-             -Dsonar.projectKey="project-Product-Service"
+             -Dsonar.host.url=https://sonarcloud.io
+             -Dsonar.login=07d772e3f32bbafb5a010e1a6de2ded247c9891d
+             -Dsonar.organization=cascompany
+             -Dsonar.projectKey=project-Product-Service
              -Dsonar.sources=src/
              -Dsonar,junit.reportsPath=target/checckstyle-result.xml
              -Dsonar,jacoco.reportsPath0tarjet/jacoco.exec
