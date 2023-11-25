@@ -14,6 +14,6 @@ jobs:
 
       - name: Checkstyle
         run: |
-          cd products-service/
+          cd products-service
           mvn checkstyle:checkstyle 
 
