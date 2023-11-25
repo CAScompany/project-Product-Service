@@ -6,11 +6,12 @@ jobs:
     steps:
       - name: Code checkout 
         uses: actions/checkout@v4
-        with:
-          path: 'products-service'
-
+#        with:
+#          path: 'products-service'
       - name: Maven test 
-        run: mvn  test 
+        run: |
+          cd products-service          
+          mvn test 
 
       - name: Checkstyle
         run: |
