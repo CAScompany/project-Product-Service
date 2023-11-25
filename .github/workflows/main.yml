@@ -1,7 +1,7 @@
 name: Product-Service
 on: workflow_dispatch
 env:
-  CODE_DIR: './products-service'
+  CODE_DIR: 'products-service/'
 jobs:
   Testing:
     runs-on: ubuntu-latest
