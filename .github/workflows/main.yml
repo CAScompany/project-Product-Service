@@ -41,5 +41,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=CAScompany_project-Product-Service
-
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar 
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.junit.reportsPath=target/surefire-reports/
+            -Dsonar.jacoco.reportsPath=target/jacoco.exec
+            -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
+            -Dsonar.java.binaries=target/test-classes/com/visualpathit/account
