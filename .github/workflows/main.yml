@@ -15,9 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Maven test 
-        run: |
-          cd products-service
-          mvn test 
+        run: mvn test 
 
       - name: Checkstyle
         run: mvn checkstyle:checkstyle 
