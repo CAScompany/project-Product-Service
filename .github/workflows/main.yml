@@ -41,10 +41,7 @@ jobs:
              -Dsonar.jacoco.reportsPathtarjet/jacoco.exec
              -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
              -Dsonar.java.binaries=target/test-classes/uy/edu/ort/devops/productsserviceexample/
-              echo "Scannerwork directory contents:"
-              ls -la .scannerwork
-              echo "Environment variables:"
-              printenv
+
 
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
