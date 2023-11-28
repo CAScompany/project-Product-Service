@@ -36,9 +36,9 @@ jobs:
         uses: warchant/setup-sonar-scanner@v7
     # Run sonar-scanner
       - name: SonarQube Scan
-        run: org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        run: sonar-scanner 
              -Dsonar.host.url=${{ secrets.SONAR_URL }}
-             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+             -Dsonar.token=${{ secrets.SONAR_TOKEN }}
              -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
              -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
              -Dsonar.sources=src/
