@@ -1,9 +1,15 @@
 name: Product-Service
 on: workflow_dispatch
 #on: [push, workflow_dispatch]
+env:
+  CODE_DIR: products-service
+
 jobs:
   Testing:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.CODE_DIR }}
     steps:
       - name: Code checkout 
         uses: actions/checkout@v4
@@ -25,6 +31,12 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonarcd cla
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2        
     # Setup sonar-scanner
       - name: Setup SonarQube
         uses: warchant/setup-sonar-scanner@v7
@@ -40,14 +52,11 @@ jobs:
              -Dsonar,jacoco.reportsPathtarjet/jacoco.exec
              -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
              -Dsonar.java.binaries=target/test-classes/uy/edu/ort/devops/productsserviceexample/
-
-            
+           
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
         uses: sonarsource/sonarqube-quality-gate-action@master
          # Force to fail step after specific time.
-        with:
-          scanMetadataReportFile: target/sonar/report-task.txt 
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
