@@ -1,15 +1,9 @@
 name: Product-Service
 on: workflow_dispatch
 #on: [push, workflow_dispatch]
-env:
-  CODE_DIR: products-service
-
 jobs:
   Testing:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ env.CODE_DIR }}
     steps:
       - name: Code checkout 
         uses: actions/checkout@v4
@@ -47,12 +41,7 @@ jobs:
              -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
              -Dsonar.java.binaries=target/test-classes/uy/edu/ort/devops/productsserviceexample/
 
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
-             
+            
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
         uses: sonarsource/sonarqube-quality-gate-action@master
