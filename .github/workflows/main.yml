@@ -37,6 +37,7 @@ jobs:
              -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
              -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
              -Dsonar.sources=src/
+             -Dsonar.junit.reportsPath=target/surefire-reports/
              -Dsonar.junit.reportsPath=target/checckstyle-result.xml
              -Dsonar.jacoco.reportsPathtarjet/jacoco.exec
              -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
@@ -46,6 +47,8 @@ jobs:
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
         uses: sonarsource/sonarqube-quality-gate-action@master
+        with:
+          scanMetadataReportFile: /home/runner/work/project-Product-Service/project-Product-Service/products-service/.scannerwork/report-task.txt
         # Force to fail step after specific time.
         timeout-minutes: 5
         env:
