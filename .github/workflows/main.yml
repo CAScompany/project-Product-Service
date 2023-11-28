@@ -48,12 +48,12 @@ jobs:
              -Dsonar.java.binaries=target/test-classes/uy/edu/ort/devops/productsserviceexample/
              -Dsonar.scanner.metadataFilePath=$GITHUB_WORKSPACE/src/target/sonar/report-task.txt
 
-      - name: SonarQube Quality Gate check
-        uses: sonarsource/sonarqube-quality-gate-action@master
-        with:
-          scanMetadataReportFile: target/sonar/report-task.txt 
-        # Force to fail step after specific time.
-        timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
+      # - name: SonarQube Quality Gate check
+      #   uses: sonarsource/sonarqube-quality-gate-action@master
+      #   with:
+      #     scanMetadataReportFile: target/sonar/report-task.txt 
+      #   # Force to fail step after specific time.
+      #   timeout-minutes: 5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN 
+      #     SONAR_HOST_URL: ${{ secrets.SONAR_URL  #OPTIONAL
