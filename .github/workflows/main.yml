@@ -46,4 +46,16 @@ jobs:
              -Dsonar.jacoco.reportsPathtarjet/jacoco.exec
              -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
              -Dsonar.java.binaries=target/test-classes/uy/edu/ort/devops/productsserviceexample/
-
+             -Dsonar.analysisId=my_analysis_id
+             -Dsonar.scanner.dumpToFile=sonar_dump.txt
+                        
+      - name: SonarQube Quality Gate check
+        id: sonarqube-quality-gate-check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+         # Force to fail step after specific time.
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
