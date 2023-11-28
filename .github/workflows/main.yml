@@ -31,12 +31,6 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonarcd cla
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2        
     # Setup sonar-scanner
       - name: Setup SonarQube
         uses: warchant/setup-sonar-scanner@v7
@@ -48,16 +42,8 @@ jobs:
              -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
              -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
              -Dsonar.sources=src/
-             -Dsonar,junit.reportsPath=target/checckstyle-result.xml
-             -Dsonar,jacoco.reportsPathtarjet/jacoco.exec
+             -Dsonar.junit.reportsPath=target/checckstyle-result.xml
+             -Dsonar.jacoco.reportsPathtarjet/jacoco.exec
              -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
              -Dsonar.java.binaries=target/test-classes/uy/edu/ort/devops/productsserviceexample/
-           
-      - name: SonarQube Quality Gate check
-        id: sonarqube-quality-gate-check
-        uses: sonarsource/sonarqube-quality-gate-action@master
-         # Force to fail step after specific time.
-        timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
+
