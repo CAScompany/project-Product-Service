@@ -1,8 +1,8 @@
 FROM maven AS BUILD_IMAGE
 WORKDIR /products-MS
-RUN cd ../products-service
-COPY pom.xml .
-COPY src ./src
+RUN cd products-service
+COPY pom.xml ../products-MS
+COPY src ../products-MS
 RUN mvn install -B
 
 FROM openjdk:8-jdk-alpine
