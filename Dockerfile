@@ -1,5 +1,6 @@
 FROM maven AS BUILD_IMAGE
 WORKDIR /products-service
+RUN cd products-service
 COPY pom.xml .
 COPY src ./src
 RUN mvn install -B
