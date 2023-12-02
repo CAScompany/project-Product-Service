@@ -3,7 +3,10 @@ on: workflow_dispatch
 #on: [push, workflow_dispatch]
 env:
   CODE_DIR: products-service
-
+  ECR_REPOSITORY: proyecto-ort-im
+  AWS_REGION: us-east-1
+  EKS_CLUSTER: project-ort-eks
+#  EKS_CLUSTER:
 jobs:
   Testing:
     runs-on: ubuntu-latest
@@ -32,16 +35,16 @@ jobs:
     # Run sonar-scanner
       - name: SonarQube Scan
         run: sonar-scanner -X
-             -Dsonar.host.url=${{ secrets.SONAR_URL }}
-             -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-             -Dsonar.sources=src/
-             -Dsonar.junit.reportsPath=target/surefire-reports/
-             -Dsonar.junit.reportsPath=target/checckstyle-result.xml
-             -Dsonar.jacoco.reportsPathtarjet/jacoco.exec
-             -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
-             -Dsonar.java.binaries=target/test-classes/uy/edu/ort/devops/productsserviceexample/
+              -Dsonar.host.url=${{ secrets.SONAR_URL }}
+              -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+              -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+              -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+              -Dsonar.sources=src/
+              -Dsonar.junit.reportsPath=target/surefire-reports/
+              -Dsonar.junit.reportsPath=target/checckstyle-result.xml
+              -Dsonar.jacoco.reportsPathtarjet/jacoco.exec
+              -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
+              -Dsonar.java.binaries=target/test-classes/uy/edu/ort/devops/productsserviceexample/
 
 
       - name: SonarQube Quality Gate check
@@ -49,8 +52,31 @@ jobs:
         uses: sonarsource/sonarqube-quality-gate-action@master
         with:
           scanMetadataReportFile: /home/runner/work/project-Product-Service/project-Product-Service/products-service/.scannerwork/report-task.txt
-        # Force to fail step after specific time.
+        # Force to fail step after specific time. $GITHUB_WORKSPACE
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
+
+  BUILD_AND_PUBLISH:
+    needs:  Testing
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.CODE_DIR }}
+    steps:
+      - name: Code checkout 
+        uses: actions/checkout@v4
+
+      - name: upload image to ECR
+        uses: appleboy/docker-ecr-action@master
+        with:
+          access_key: ${{ secrets.AWS_ACCES_KEY_ID}}
+          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          registry: ${{ secrets.registry }}
+          repo: ${{env.ECR_REPOSITORY}}
+          region: ${{env.AWS_REGION}}
+          tags: latest,${{github.run_number}}
+          daemon_off: false
+          dockerfile: ./Dockerfile
+          context: ./
