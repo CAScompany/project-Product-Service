@@ -1,5 +1,5 @@
 FROM maven AS BUILD_IMAGE
-COPY ./ products-MS
+COPY ./products-service products-MS
 RUN cd products-MS && mvn install -B
 
 FROM openjdk:8-jdk-alpine
