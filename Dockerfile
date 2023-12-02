@@ -1,8 +1,6 @@
 FROM maven AS BUILD_IMAGE
-WORKDIR /products-MS
-COPY ../pom.xml .
-COPY ../src ./src
-RUN mvn install -B
+COPY ./ products-MS
+RUN cd products-MS && mvn install -B
 
 FROM openjdk:8-jdk-alpine
 LABEL "Project"="Product-Service"
