@@ -67,7 +67,7 @@ jobs:
       - name: Code checkout 
         uses: actions/checkout@v4
       - name: Build JAR
-        run: mvn package -B
+        run: mvn install
 
       - name: Create GitHub Release
         id: create_release
