@@ -57,8 +57,7 @@ jobs:
   #       env:
   #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   #         SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
-
-  BUILD_AND_PUBLISH:
+  Release:
 #    needs:  Testing
     runs-on: ubuntu-latest
     defaults:
@@ -67,16 +66,49 @@ jobs:
     steps:
       - name: Code checkout 
         uses: actions/checkout@v4
+      - name: Build JAR
+        run: mvn package -B
 
-      - name: upload image to ECR
-        uses: appleboy/docker-ecr-action@master        
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          access_key: ${{ secrets.AWS_ACCESS_KEY_ID_PERSONAL_ECR}}
-          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PERSONAL_ECR}}
-          registry: ${{ secrets.registry }}
-          repo: ${{env.ECR_REPOSITORY}}
-          region: ${{env.AWS_REGION}}
-          tags: latest,${{github.run_number}}
-          daemon_off: false
-          dockerfile: ./Dockerfile
-          context: ./
+          tag_name: v${{github.run_number}}
+          release_name: product-service
+          body: Describe your release here
+          draft: false
+          prerelease: false 
+      - name: Upload JAR to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/products-service-example-0.0.1-SNAPSHOT.jar
+          asset_name: products-service-example-0.0.1-SNAPSHOT.jar
+          asset_content_type: application/java-archive
+
+  # BUILD_AND_PUBLISH:
+  #   needs:  Release
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ${{ env.CODE_DIR }}
+  #   steps:
+  #     - name: Code checkout 
+  #       uses: actions/checkout@v4
+
+  #     - name: upload image to ECR
+  #       uses: appleboy/docker-ecr-action@master        
+  #       with:
+  #         access_key: ${{ secrets.AWS_ACCESS_KEY_ID_PERSONAL_ECR}}
+  #         secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PERSONAL_ECR}}
+  #         registry: ${{ secrets.registry }}
+  #         repo: ${{env.ECR_REPOSITORY}}
+  #         region: ${{env.AWS_REGION}}
+  #         tags: latest,${{github.run_number}}
+  #         daemon_off: false
+  #         dockerfile: ./Dockerfile
+  #         context: ./
