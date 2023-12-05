@@ -86,16 +86,19 @@ jobs:
       - name: Instalar Newman
         run: |
               npm install -g newman@latest
+              nmp install -g newman-reporter-htmlextra
+              npm fund
 
       - name: Ejecutar pruebas funcionales con Newman
         run: |
-              newman run postman_test.json --reporters cli,json --reporter-json-export results.json
+              newman run ./postman_test.json -r cli,htmlextra --report-htmlextra-export testArtifacts/htmlreport.html
+#              cd newman && ls | grep *.html | awk '{print $1}' | xargs -I {} mv {} reporte.html
 
       - name: Almacenar reporte como artefacto
         uses: actions/upload-artifact@v3
         with:
           name: reporte-postman
-          path: results.json
+          path: testArtifacts
 
 #   Release:
 # #    needs:  Testing
