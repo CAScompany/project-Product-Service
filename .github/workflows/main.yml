@@ -86,7 +86,7 @@ jobs:
       - name: Instalar Newman
         run: |
               npm install -g newman@latest
-              nmp install -g newman-reporter-htmlextra
+              nmp install -g newman-reporter-htmlextra@latest
               npm fund
 
       - name: Ejecutar pruebas funcionales con Newman
