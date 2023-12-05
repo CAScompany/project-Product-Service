@@ -99,7 +99,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: reporte-postman
-          path: testArtifacts
+          path: $GITHUB_WORKSPACE/testArtifacts
 
 #   Release:
 # #    needs:  Testing
