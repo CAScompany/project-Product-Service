@@ -81,7 +81,7 @@ jobs:
       - name: Instalar Node.js y npm
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '16.14.2'
 
       - name: Instalar Newman
         run: |
