@@ -92,6 +92,8 @@ jobs:
         run: |
               newman run postman_test.json -r cli,htmlextra --reporter-htmlextra-export testArtifacts/htmlreport.html
 #              cd newman && ls | grep *.html | awk '{print $1}' | xargs -I {} mv {} reporte.html
+      - name: Revisar archivos 
+        run: tree
 
       - name: Almacenar reporte como artefacto
         uses: actions/upload-artifact@v3
