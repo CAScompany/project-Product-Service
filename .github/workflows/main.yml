@@ -66,35 +66,41 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v2
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin' 
-          java-version: '11'
+      # - name: Set up JDK 11
+      #   uses: actions/setup-java@v3
+      #   with:
+      #     distribution: 'temurin' 
+      #     java-version: '11'
 
-      - name: Compilar y ejecutar el JAR
+      # - name: Compilar y ejecutar el JAR
+      #   run: |
+      #     mvn install -B
+      #     java -jar /home/runner/work/project-Product-Service/project-Product-Service/products-service/target/products-service-example-0.0.1-SNAPSHOT.jar
+      - name : ubicar_directorio
         run: |
-          mvn install -B
-          java -jar /home/runner/work/project-Product-Service/project-Product-Service/products-service/target/products-service-example-0.0.1-SNAPSHOT.jar
+            echo $GITHUB_WORKSPACE
+            ls 
+      # - name: Instalar Node.js y npm
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: '16'
 
-      - name: Instalar Node.js y npm
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
+      # - name: Instalar Newman
+      #   run: |
+      #         npm install -g newman
+      #         npm install -g newman-reporter-slackreporter
+      #         nmp install -g newman-reporter-htmlextra
 
-      - name: Instalar Newman
-        run: npm install -g newman
+      # - name: Ejecutar pruebas funcionales con Newman
+      #   run: |
+      #         newman run ./postman_test.json -r htmlextra
+      #         cd newman && ls | grep *.html | awk '{print $1}' | xargs -I {} mv {} reporte.html
 
-      - name: Ejecutar pruebas funcionales con Newman
-        run: |
-              newman run ./postman_test.json -r htmlextra
-              cd newman && ls | grep *.html | awk '{print $1}' | xargs -I {} mv {} reporte.html
-
-      - name: Almacenar reporte como artefacto
-        uses: actions/upload-artifact@v2
-        with:
-          name: reporte-pruebas
-          path: ./newman/reporte.html
+      # - name: Almacenar reporte como artefacto
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: reporte-pruebas
+      #     path: ./newman/reporte.html
 
       # - name: Enviar notificación con enlace al reporte
       #   uses: actions/upload-artifact@v2
