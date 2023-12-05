@@ -89,7 +89,7 @@ jobs:
 
       - name: Ejecutar pruebas funcionales con Newman
         run: |
-              newman run ./postman_test.json --reporters cli,json --reporter-json-export results.json
+              newman run postman_test.json --reporters cli,json --reporter-json-export results.json
 
       - name: Almacenar reporte como artefacto
         uses: actions/upload-artifact@v3
