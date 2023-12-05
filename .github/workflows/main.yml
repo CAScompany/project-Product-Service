@@ -66,47 +66,40 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v2
 
-      # - name: Set up JDK 11
-      #   uses: actions/setup-java@v3
-      #   with:
-      #     distribution: 'temurin' 
-      #     java-version: '11'
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' 
+          java-version: '11'
 
-      # - name: Compilar y ejecutar el JAR
-      #   run: |
-      #     mvn install -B
-      #     java -jar /home/runner/work/project-Product-Service/project-Product-Service/products-service/target/products-service-example-0.0.1-SNAPSHOT.jar
-      - name : ubicar_directorio
+      - name: Compilar y ejecutar el JAR
         run: |
-            echo $GITHUB_WORKSPACE
-            ls 
-      # - name: Instalar Node.js y npm
-      #   uses: actions/setup-node@v2
-      #   with:
-      #     node-version: '16'
+          mvn install -B
+          java -jar $GITHUB_WORKSPACE/products-service/target/products-service-example-0.0.1-SNAPSHOT.jar &
+          sleep 5
 
-      # - name: Instalar Newman
-      #   run: |
-      #         npm install -g newman
-      #         npm install -g newman-reporter-slackreporter
-      #         nmp install -g newman-reporter-htmlextra
+      - name: Instalar Node.js y npm
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
 
-      # - name: Ejecutar pruebas funcionales con Newman
-      #   run: |
-      #         newman run ./postman_test.json -r htmlextra
-      #         cd newman && ls | grep *.html | awk '{print $1}' | xargs -I {} mv {} reporte.html
+      - name: Instalar Newman
+        run: |
+              npm install -g newman
+              npm install -g newman-reporter-slackreporter
+              nmp install -g newman-reporter-htmlextra
 
-      # - name: Almacenar reporte como artefacto
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: reporte-pruebas
-      #     path: ./newman/reporte.html
+      - name: Ejecutar pruebas funcionales con Newman
+        run: |
+              newman run ./postman_test.json -r cli,htmlextra --report-htmlextra-export testArtifacts/htmlreport.html
+#              cd newman && ls | grep *.html | awk '{print $1}' | xargs -I {} mv {} reporte.html
 
-      # - name: Enviar notificación con enlace al reporte
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: reporte-pruebas
-      #     path: results.json  
+      - name: Almacenar reporte como artefacto
+        uses: actions/upload-artifact@v3
+        with:
+          name: reporte-postman
+          path: testArtifacts
+
 #   Release:
 # #    needs:  Testing
 #     runs-on: ubuntu-latest
