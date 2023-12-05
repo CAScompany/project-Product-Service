@@ -75,7 +75,7 @@ jobs:
       - name: Compilar y ejecutar el JAR
         run: |
           mvn install -B
-          java -jar ./products-service/target/products-service-example-0.0.1-SNAPSHOT.jar
+          java -jar /home/runner/work/project-Product-Service/project-Product-Service/products-service/target/products-service-example-0.0.1-SNAPSHOT.jar
 
       - name: Instalar Node.js y npm
         uses: actions/setup-node@v2
