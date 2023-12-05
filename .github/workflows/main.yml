@@ -85,6 +85,7 @@ jobs:
 
       - name: Instalar Newman
         run: |
+              npm cache clean --force and than npm install uuid@7.0.3 --force
               npm install -g newman
               nmp install -g newman-reporter-htmlextra
 
