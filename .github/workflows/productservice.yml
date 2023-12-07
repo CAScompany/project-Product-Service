@@ -46,7 +46,7 @@ jobs:
               -Dsonar.junit.reportsPath=target/checckstyle-result.xml
               -Dsonar.jacoco.reportsPathtarjet/jacoco.exec
               -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
-              -Dsonar.java.binaries=**/target/test-classes
+              -Dsonar.java.binaries=**/target/classes
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
         uses: sonarsource/sonarqube-quality-gate-action@master
