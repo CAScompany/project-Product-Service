@@ -162,7 +162,7 @@ jobs:
           registry: ${{ secrets.registry }}
           repo: ${{env.ECR_REPOSITORY}}
           region: ${{env.AWS_REGION}}
-          tags: product-service,v${{github.run_number}}
+          tags: latest,product-service,v${{github.run_number}}
           daemon_off: false
           dockerfile: ./Dockerfile
           context: ./
