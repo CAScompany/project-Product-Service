@@ -1,22 +1,22 @@
 name: Product-Service
-#on: workflow_dispatch
-#on: [push, workflow_dispatch]
+
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
+
 env:
   CODE_DIR: ./products-service
   ECR_REPOSITORY: proyecto-ort-repo
   AWS_REGION: us-east-1
   EKS_CLUSTER: project-ort-eks
-#  EKS_CLUSTER:
+
 permissions:
   pull-requests: read
 jobs:
-  Testing:
+  Analysis:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -37,14 +37,15 @@ jobs:
           distribution: 'temurin' 
           java-version: '11'
 
-      - name: Setup SonarQube
-        uses: warchant/setup-sonar-scanner@v7
 
-    # Run sonar-scanner
-      - name: SonarQube Scan
-        run: sonar-scanner -X
-              -Dsonar.host.url=${{ secrets.SONAR_URL }}
-              -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+   
+      - name: Analyze with SonarCloud
+        uses: SonarSource/sonarcloud-github-action@de2e56b42aa84d0b1c5b622644ac17e505c9a049
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+           args:
               -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
               -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
               -Dsonar.sources=src/
@@ -66,48 +67,62 @@ jobs:
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
+          
+         
+         
   FUNTIONAL_TESTING:
-    needs:  Testing
+    needs:  Analysis
     runs-on: ubuntu-latest
     defaults:
-      run:
-        working-directory: ${{ env.CODE_DIR }}
+        run:
+            working-directory: ${{ env.CODE_DIR }}
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin' 
-          java-version: '11'
-
-      - name: Compilar y ejecutar el JAR
-        run: mvn spring-boot:run & sleep 4
-
-      - name: Instalar Node.js y npm
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Instalar Newman
-        run: |
-              npm install -g newman@latest
-              npm install -g newman-reporter-htmlextra
-
-      - name: Ejecutar pruebas funcionales con Newman
-        run: |
-              newman run postman_test.json -r cli,htmlextra --reporter-htmlextra-export testArtifacts/htmlreport.html
-#              cd newman && ls | grep *.html | awk '{print $1}' | xargs -I {} mv {} reporte.html
-      - name: Revisar archivos 
-        run: tree
-
-      - name: Almacenar reporte como artefacto
-        uses: actions/upload-artifact@v3
-        with:
-          name: reporte-postman-products-service
-          path: ./products-service/testArtifacts
+    - name: Code checkout 
+      uses: actions/checkout@v4
+          
+    - name: test maven
+      run: mvn clean test install
+                
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin' 
+        java-version: '11'
+          
+    - name: Correr App
+      run: mvn spring-boot:run & sleep 4
+            
+    - name:  Install Node.js and npm
+      uses: actions/setup-node@v4
+      with:
+                    node-version: '20'
+          
+    - name: Instalar Newman
+      run: |
+             npm install -g newman@latest
+             npm install -g newman-reporter-htmlextra
+          
+                - name: Ejecutar pruebas funcionales con Newman
+                  run: |
+                        newman run collection.json -r cli,htmlextra --reporter-htmlextra-export testArtifacts/htmlreport.html
+                - name: Revisar archivos 
+                  run: tree
+                              
+                - name: Almacenar reporte como artefacto
+                  uses: actions/upload-artifact@v3
+                  with:
+                    name: reporte-postman-paymant-service
+                    path: ./products-service/testArtifacts
+          
+                - name: Detener la app
+                  run: |
+                      PID=$(ps aux | grep 'spring-boot:run' | grep -v grep | awk '{print $2}')
+                      if [ -n "$PID" ]; then
+                          echo "Stopping Spring Boot App with PID $PID"
+                          kill -9 $PID
+                      else
+                          echo "Spring Boot App not running."
+                      fi
 
   Release:
     needs:  FUNTIONAL_TESTING
@@ -145,24 +160,30 @@ jobs:
           asset_content_type: application/java-archive
 
   BUILD_AND_PUBLISH:
-    needs:  Release
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ env.CODE_DIR }}
-    steps:
-      - name: Code checkout 
-        uses: actions/checkout@v4
-
-      - name: upload image to ECR
-        uses: appleboy/docker-ecr-action@master        
-        with:
-          access_key: ${{ secrets.AWS_ACCESS_KEY_ID_PERSONAL_ECR}}
-          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PERSONAL_ECR}}
-          registry: ${{ secrets.registry }}
-          repo: ${{env.ECR_REPOSITORY}}
-          region: ${{env.AWS_REGION}}
-          tags: product-service-v${{github.run_number}}
-          daemon_off: false
-          dockerfile: ./Dockerfile
-          context: ./
+              needs:  Release
+              runs-on: ubuntu-latest
+              defaults:
+                  run:
+                    working-directory: ${{ env.CODE_DIR }}
+              steps:
+              - name: Code checkout 
+                uses: actions/checkout@v4
+          
+              - name: Setup AWS creds
+                uses: aws-actions/configure-aws-credentials@v4
+                with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+          
+              - name: Upload image to ECR
+                uses: appleboy/docker-ecr-action@master        
+                with:
+                  registry: ${{ secrets.REGISTRY }}
+                  repo: ${{ secrets.ECR_REPOSITORY }}
+                  tags: paymnet-service-v${{ github.run_number }}
+                  daemon_off: false
+                  dockerfile: ./Dockerfile
+                  context: ./
+          
