@@ -62,7 +62,7 @@ jobs:
         id: sonarqube-quality-gate-check
         uses: sonarsource/sonarqube-quality-gate-action@master
         with:
-          scanMetadataReportFile: /home/runner/work/project-Product-Service/project-Product-Service/products-service/.scannerwork/report-task.txt
+            scanMetadataReportFile: ./.scannerwork/report-task.txt
         # Force to fail step after specific time. $GITHUB_WORKSPACE
         timeout-minutes: 5
         env:
