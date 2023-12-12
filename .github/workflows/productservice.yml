@@ -54,6 +54,7 @@ jobs:
               -Dsonar.jacoco.reportsPathtarjet/jacoco.exec
               -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
               -Dsonar.java.binaries=**/target/classes
+              -Dsonar.exclusions=**/Dockerfile
       
       - name: Revisar archivos 
         run: tree       
