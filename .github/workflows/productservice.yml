@@ -53,7 +53,7 @@ jobs:
               -Dsonar.junit.reportsPath=target/checckstyle-result.xml
               -Dsonar.jacoco.reportsPathtarjet/jacoco.exec
               -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
-              -Dsonar.java.binaries=target/test-classes/uy/edu/ort/devops/productsserviceexample/
+              -Dsonar.java.binaries=**/target/classes
       
       - name: Revisar archivos 
         run: tree       
