@@ -194,7 +194,6 @@ jobs:
               - name: Ver archivos
                 run: |
                       ls -lath 
-                      cd    
               - name: Upload image to ECR
                 uses: appleboy/docker-ecr-action@master        
                 with:
@@ -203,5 +202,5 @@ jobs:
                   tags: product-service-v${{ github.run_number }}
                   daemon_off: false
                   dockerfile: ./Dockerfile
-                  context: ./
+                  context: ./.github/Doker
           
