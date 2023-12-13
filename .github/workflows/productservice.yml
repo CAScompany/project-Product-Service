@@ -22,7 +22,9 @@ on:
       REPO:
         required: true          
       SONAR_TOKEN:
-        required: true    
+        required: true
+      GITHUB_TOKEN:
+        required: true   
 
 env:
   CODE_DIR: ./products-service

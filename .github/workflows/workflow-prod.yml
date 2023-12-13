@@ -26,3 +26,4 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       REGISTRY: ${{ secrets.REGISTRY }}
       REPO: ${{ secrets.ECR_REPOSITORY }}
+      GITHUB_TOKEN: ${{ secrets.TOKEN_RELEASE }}
