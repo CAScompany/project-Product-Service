@@ -199,6 +199,6 @@ jobs:
                   repo: ${{ secrets.ECR_REPOSITORY }}
                   tags: product-service-${{ inputs.CI_ENV }}-v${{ github.run_number }}
                   daemon_off: false
-#                  dockerfile: ./Dockerfile
-                  context: ./Doker
+                  dockerfile: Dockerfile
+                  context: ./.github/Docker
           
