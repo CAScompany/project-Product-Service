@@ -117,88 +117,86 @@ jobs:
           
     - name: Ejecutar pruebas funcionales con Newman
       run: |
-            cd .././.github/
-            ls -lath
-    #         newman run .././.github/Postman/postman_test.json -r cli,htmlextra --reporter-htmlextra-export testArtifacts/htmlreport.html
-    # - name: Revisar archivos 
-    #   run: tree
+            newman run .././.github/Postman/postman_test.json -r cli,htmlextra --reporter-htmlextra-export testArtifacts/htmlreport.html
+    - name: Revisar archivos 
+      run: tree
                   
-    # - name: Almacenar reporte como artefacto
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: reporte-postman-paymant-service-${{ inputs.CI_ENV }}
-    #     path: ./products-service/testArtifacts
+    - name: Almacenar reporte como artefacto
+      uses: actions/upload-artifact@v3
+      with:
+        name: reporte-postman-paymant-service-${{ inputs.CI_ENV }}
+        path: ./products-service/testArtifacts
 
-    # - name: Detener la app
-    #   run: |
-    #       PID=$(ps aux | grep 'spring-boot:run' | grep -v grep | awk '{print $2}')
-    #       if [ -n "$PID" ]; then
-    #           echo "Stopping Spring Boot App with PID $PID"
-    #           kill -9 $PID
-    #       else
-    #           echo "Spring Boot App not running."
-    #       fi
+    - name: Detener la app
+      run: |
+          PID=$(ps aux | grep 'spring-boot:run' | grep -v grep | awk '{print $2}')
+          if [ -n "$PID" ]; then
+              echo "Stopping Spring Boot App with PID $PID"
+              kill -9 $PID
+          else
+              echo "Spring Boot App not running."
+          fi
 
-  # Release:
-  #   needs:  FUNTIONAL_TESTING
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: ${{ env.CODE_DIR }}
-  #   steps:
-  #     - name: Code checkout 
-  #       uses: actions/checkout@v4
-  #     - name: Build JAR
-  #       run: mvn install -B
+  Release:
+    needs:  FUNTIONAL_TESTING
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.CODE_DIR }}
+    steps:
+      - name: Code checkout 
+        uses: actions/checkout@v4
+      - name: Build JAR
+        run: mvn install -B
 
-  #     - name: Create GitHub Release
-  #       id: create_release
-  #       uses: actions/create-release@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.TOKEN_RELEASE }}
-  #       with:
-  #         tag_name: v${{github.run_number}}-${{ inputs.CI_ENV }}
-  #         release_name: product-service-${{ inputs.CI_ENV }}
-  #         body: product-service v${{github.run_number}}
-  #         draft: false
-  #         prerelease: false 
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_RELEASE }}
+        with:
+          tag_name: v${{github.run_number}}-${{ inputs.CI_ENV }}
+          release_name: product-service-${{ inputs.CI_ENV }}
+          body: product-service v${{github.run_number}}
+          draft: false
+          prerelease: false 
         
-  #     - name: Upload JAR to Release          
-  #       uses: actions/upload-release-asset@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.TOKEN_RELEASE }}
+      - name: Upload JAR to Release          
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_RELEASE }}
   
-  #       with:
-  #         upload_url: ${{ steps.create_release.outputs.upload_url }}
-  #         asset_path: ./products-service/target/products-service-example-0.0.1-SNAPSHOT.jar
-  #         asset_name: products-service-${{ inputs.CI_ENV }}.jar
-  #         asset_content_type: application/java-archive
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./products-service/target/products-service-example-0.0.1-SNAPSHOT.jar
+          asset_name: products-service-${{ inputs.CI_ENV }}.jar
+          asset_content_type: application/java-archive
 
-  # BUILD_AND_PUBLISH:
-  #             needs:  Release
-  #             runs-on: ubuntu-latest
-  #             defaults:
-  #                 run:
-  #                   working-directory: ${{ env.CODE_DIR }}
-  #             steps:
-  #             - name: Code checkout 
-  #               uses: actions/checkout@v4
+  BUILD_AND_PUBLISH:
+              needs:  Release
+              runs-on: ubuntu-latest
+              defaults:
+                  run:
+                    working-directory: ${{ env.CODE_DIR }}
+              steps:
+              - name: Code checkout 
+                uses: actions/checkout@v4
           
-  #             - name: Setup AWS creds
-  #               uses: aws-actions/configure-aws-credentials@v4
-  #               with:
-  #                 aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #                 aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #                 aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-  #                 aws-region: ${{ secrets.AWS_REGION }}
+              - name: Setup AWS creds
+                uses: aws-actions/configure-aws-credentials@v4
+                with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+                  aws-region: ${{ secrets.AWS_REGION }}
           
-  #             - name: Upload image to ECR
-  #               uses: appleboy/docker-ecr-action@master        
-  #               with:
-  #                 registry: ${{ secrets.REGISTRY }}
-  #                 repo: ${{ secrets.ECR_REPOSITORY }}
-  #                 tags: product-service,${{ inputs.CI_ENV }}-v${{ github.run_number }}
-  #                 daemon_off: false
-  #                 dockerfile: Dockerfile
-  #                 context: $GITHUB_WORKSPACE/./.github/Dokerfile/
+              - name: Upload image to ECR
+                uses: appleboy/docker-ecr-action@master        
+                with:
+                  registry: ${{ secrets.REGISTRY }}
+                  repo: ${{ secrets.ECR_REPOSITORY }}
+                  tags: product-service,${{ inputs.CI_ENV }}-v${{ github.run_number }}
+                  daemon_off: false
+                  dockerfile: Dockerfile
+                  context: ././.github/Postman/Dokerfile/
           
