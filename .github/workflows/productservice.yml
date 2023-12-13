@@ -30,8 +30,6 @@ env:
 #  AWS_REGION: us-east-1
 #  EKS_CLUSTER: project-ort-eks
 
-permissions:
-  pull-requests: read
 jobs:
   Analysis:
     runs-on: ubuntu-latest
