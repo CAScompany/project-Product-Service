@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build-staging:
-    uses: CAScompany/project-Product-Service/.github/workflows/productservice.yml@@test
+    uses: CAScompany/project-Product-Service/.github/workflows/productservice.yml@test
     with:
       CI_ENV: test
       CONTENTFUL_ENVIRONMENT: 'test'
