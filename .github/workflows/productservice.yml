@@ -53,7 +53,7 @@ jobs:
               -Dsonar.jacoco.reportsPathtarjet/jacoco.exec
               -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
               -Dsonar.exclusions=**/Dockerfile
-      
+ 
       - name: Revisar archivos 
         run: tree       
       
@@ -66,9 +66,7 @@ jobs:
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          
-         
-         
+
   # FUNTIONAL_TESTING:
   #   needs:  Analysis
   #   runs-on: ubuntu-latest
