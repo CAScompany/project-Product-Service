@@ -200,5 +200,5 @@ jobs:
                   tags: product-service-v${{ github.run_number }}
                   daemon_off: false
                   dockerfile: ./Dockerfile
-                  context: .././.github/Doker/
+                  context: ./.github/Doker
           
