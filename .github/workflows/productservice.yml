@@ -101,7 +101,7 @@ jobs:
           
     - name: Ejecutar pruebas funcionales con Newman
       run: |
-            newman run collection.json -r cli,htmlextra --reporter-htmlextra-export testArtifacts/htmlreport.html
+            newman run postman_test.json -r cli,htmlextra --reporter-htmlextra-export testArtifacts/htmlreport.html
     - name: Revisar archivos 
       run: tree
                   
