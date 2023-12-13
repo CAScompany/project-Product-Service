@@ -15,14 +15,15 @@ concurrency:
 
 jobs:
   build-prod:
-    uses: CAScompany/project-Frontend/.github/workflows/deploy-to-s3.yml@main
+    uses: CAScompany/project-Product-Service/.github/workflows/productservice.yml@main
     with:
-      CI_ENV: prod
+      CI_ENV: producion
       CONTENTFUL_ENVIRONMENT: 'main'
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN}}
-      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-      S3_ORIGIN_BUCKET: ${{ secrets.S3_ORIGIN_BUCKET_PROD }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      REGISTRY: ${{ secrets.REGISTRY }}
+      REPO: ${{ secrets.ECR_REPOSITORY }}
