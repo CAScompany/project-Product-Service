@@ -177,9 +177,6 @@ jobs:
   BUILD_AND_PUBLISH:
 #              needs:  Release
               runs-on: ubuntu-latest
-              defaults:
-                  run:
-                    working-directory: ${{ env.CODE_DIR }}
               steps:
               - name: Code checkout 
                 uses: actions/checkout@v4
@@ -199,6 +196,6 @@ jobs:
                   repo: ${{ secrets.ECR_REPOSITORY }}
                   tags: product-service,${{ inputs.CI_ENV }}-v${{ github.run_number }}
                   daemon_off: false
-                  dockerfile: ./Dockerfile
-                  context: ./.github/Dokerfile/
+                  dockerfile: Dockerfile
+                  context: ./.github/Doker/
           

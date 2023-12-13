@@ -1,5 +1,4 @@
 FROM maven AS BUILD_IMAGE
-RUN cd ../../
 COPY ./products-service products-MS
 RUN cd products-MS && mvn install -B
 
