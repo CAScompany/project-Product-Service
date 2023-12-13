@@ -192,8 +192,7 @@ jobs:
                   aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
                   aws-region: ${{ secrets.AWS_REGION }}
               - name: Ver archivos
-                run: |
-                      ls -lath 
+                run: export dir=./.github/Doker
               - name: Upload image to ECR
                 uses: appleboy/docker-ecr-action@master        
                 with:
@@ -201,6 +200,6 @@ jobs:
                   repo: ${{ secrets.ECR_REPOSITORY }}
                   tags: product-service-v${{ github.run_number }}
                   daemon_off: false
-                  dockerfile: ./Dockerfile
-                  context: ./.github/Doker
+                  dockerfile: Dockerfile
+                  context: ./$dir
           
