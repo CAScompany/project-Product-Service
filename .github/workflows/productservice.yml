@@ -192,7 +192,7 @@ jobs:
                   aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
                   aws-region: ${{ secrets.AWS_REGION }}
               - name: Ver archivos
-                run: ls-lath    
+                run: ls -lath    
               # - name: Upload image to ECR
               #   uses: appleboy/docker-ecr-action@master        
               #   with:
