@@ -23,7 +23,7 @@ on:
         required: true          
       SONAR_TOKEN:
         required: true
-      GITHUB_TOKEN:
+      TOKEN_RELEASE:
         required: true   
 
 env:

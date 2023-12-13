@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   build-dev:
-    uses: CAScompany/project-Product-Service/.github/workflows/productservice.yml@dev
+    uses: CAScompany/project-Product-Service/.github/workflows/productservice.yml@main
     with:
       CI_ENV: dev
       CONTENTFUL_ENVIRONMENT: 'dev'
