@@ -96,30 +96,30 @@ jobs:
           
     - name: Instalar Newman
       run: |
-             npm install -g newman@latest
-             npm install -g newman-reporter-htmlextra
+            npm install -g newman@latest
+            npm install -g newman-reporter-htmlextra
           
-                - name: Ejecutar pruebas funcionales con Newman
-                  run: |
-                        newman run collection.json -r cli,htmlextra --reporter-htmlextra-export testArtifacts/htmlreport.html
-                - name: Revisar archivos 
-                  run: tree
-                              
-                - name: Almacenar reporte como artefacto
-                  uses: actions/upload-artifact@v3
-                  with:
-                    name: reporte-postman-paymant-service
-                    path: ./products-service/testArtifacts
-          
-                - name: Detener la app
-                  run: |
-                      PID=$(ps aux | grep 'spring-boot:run' | grep -v grep | awk '{print $2}')
-                      if [ -n "$PID" ]; then
-                          echo "Stopping Spring Boot App with PID $PID"
-                          kill -9 $PID
-                      else
-                          echo "Spring Boot App not running."
-                      fi
+    - name: Ejecutar pruebas funcionales con Newman
+      run: |
+            newman run collection.json -r cli,htmlextra --reporter-htmlextra-export testArtifacts/htmlreport.html
+    - name: Revisar archivos 
+      run: tree
+                  
+    - name: Almacenar reporte como artefacto
+      uses: actions/upload-artifact@v3
+      with:
+        name: reporte-postman-paymant-service
+        path: ./products-service/testArtifacts
+
+    - name: Detener la app
+      run: |
+          PID=$(ps aux | grep 'spring-boot:run' | grep -v grep | awk '{print $2}')
+          if [ -n "$PID" ]; then
+              echo "Stopping Spring Boot App with PID $PID"
+              kill -9 $PID
+          else
+              echo "Spring Boot App not running."
+          fi
 
   Release:
     needs:  FUNTIONAL_TESTING
@@ -157,7 +157,7 @@ jobs:
           asset_content_type: application/java-archive
 
   BUILD_AND_PUBLISH:
-              #needs:  Release
+              needs:  Release
               runs-on: ubuntu-latest
               defaults:
                   run:
