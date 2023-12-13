@@ -191,15 +191,14 @@ jobs:
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
                   aws-region: ${{ secrets.AWS_REGION }}
-              - name: Ver archivos
-                run: export dir=./.github/Doker
+
               - name: Upload image to ECR
                 uses: appleboy/docker-ecr-action@master        
                 with:
                   registry: ${{ secrets.REGISTRY }}
                   repo: ${{ secrets.ECR_REPOSITORY }}
-                  tags: product-service-v${{ github.run_number }}
+                  tags: product-service-${{ inputs.CI_ENV }}-v${{ github.run_number }}
                   daemon_off: false
                   dockerfile: Dockerfile
-                  context: ./$dir
+                  context: ./Docker
           
