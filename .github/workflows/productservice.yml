@@ -117,7 +117,7 @@ jobs:
           
     - name: Ejecutar pruebas funcionales con Newman
       run: |
-            cd ../.
+            cd .././.github/Postman/
             ls -lath
     #         newman run .././.github/Postman/postman_test.json -r cli,htmlextra --reporter-htmlextra-export testArtifacts/htmlreport.html
     # - name: Revisar archivos 
