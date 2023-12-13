@@ -194,8 +194,8 @@ jobs:
                 with:
                   registry: ${{ secrets.REGISTRY }}
                   repo: ${{ secrets.ECR_REPOSITORY }}
-                  tags: product-service-${{ inputs.CI_ENV }}-v${{ github.run_number }}
+                  tags: product-service-${{ inputs.CI_ENV }}
                   daemon_off: false
-                  dockerfile: Dockerfile
+                  dockerfile: ./Dockerfile
                   context: ./.github/Doker/
           
