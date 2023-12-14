@@ -70,7 +70,7 @@ jobs:
               -Dsonar.junit.reportsPath=target/checckstyle-result.xml
               -Dsonar.jacoco.reportsPathtarjet/jacoco.exec
               -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
-              -Dsonar.exclusions=**./.github/Dokerfile/Dockerfile
+              -Dsonar.exclusions=**/Dockerfile
  
       - name: Revisar archivos 
         run: tree       
@@ -86,7 +86,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   FUNTIONAL_TESTING:
-#    needs:  Analysis
+    needs:  Analysis
     runs-on: ubuntu-latest
     defaults:
         run:
