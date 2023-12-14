@@ -1,4 +1,0 @@
-FROM openjdk:8-jdk-alpine
-COPY products-service.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app.jar"]
