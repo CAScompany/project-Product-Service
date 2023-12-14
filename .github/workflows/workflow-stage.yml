@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   build-staging:
-    uses: CAScompany/project-Product-Service/.github/workflows/productservice.yml@main
+    uses: CAScompany/project-Product-Service/.github/workflows/productservice.yml@test
     with:
       CI_ENV: test
       CONTENTFUL_ENVIRONMENT: 'test'
@@ -25,5 +25,5 @@ jobs:
       AWS_REGION: ${{ secrets.AWS_REGION }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       REGISTRY: ${{ secrets.REGISTRY }}
-      REPO: ${{ secrets.ECR_REPOSITORY }}
-      TOKEN_RELEASE: ${{ secrets.TOKEN_RELEASE }}      
+      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+      TOKEN_RELEASE: ${{ secrets.TOKEN_RELEASE }}   
