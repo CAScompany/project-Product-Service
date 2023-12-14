@@ -192,13 +192,32 @@ jobs:
                   aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
                   aws-region: ${{ secrets.AWS_REGION }}
 #
-              - name: Upload image to ECR
-                uses: appleboy/docker-ecr-action@master        
-                with:
-                  registry: ${{ secrets.REGISTRY }}
-                  repo: ${{ secrets.ECR_REPOSITORY }}
-                  tags: product-service-${{ inputs.CI_ENV }}-v${{ github.run_number }}
-                  daemon_off: false
-                  dockerfile: Dockerfile
-                  context: ./.github/Docker
-          
+              # - name: Upload image to ECR
+              #   uses: appleboy/docker-ecr-action@master        
+              #   with:
+              #     registry: ${{ secrets.REGISTRY }}
+              #     repo: ${{ secrets.ECR_REPOSITORY }}
+              #     tags: product-service-${{ inputs.CI_ENV }}-v${{ github.run_number }}
+              #     daemon_off: false
+              #     dockerfile: Dockerfile
+              #     context: ./.github/Docker
+
+              - name : Build and upload to ECR
+                run: .././.github/scripts/build-image.sh
+                shell: bash
+                env:
+                  REGISTRY: ${{ secrets.REGISTRY }}
+                  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+                  AWS_ACCOUNT_ID_NUMBER: ${{ secrets.AWS_ACCOUNT_ID_NUMBER }}
+                  AWS_REGION: ${{ secrets.AWS_REGION }}
+                  CI_ENV: ${{ inputs.CI_ENV }}
+                  VERSION: ${{ github.run_number }}
+
+              # - name : upload to ECR
+              #   run: .././.github/scripts/deploy-ECR.sh
+              #   shell: bash
+              #   env:
+              #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              #     aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+              #     aws-region: ${{ secrets.AWS_REGION }}                  
