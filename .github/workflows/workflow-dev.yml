@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   build-dev:
-    uses: CAScompany/project-Product-Service/.github/workflows/productservice.yml@main
+    uses: CAScompany/project-Product-Service/.github/workflows/productservice.yml@dev
     with:
       CI_ENV: dev
       CONTENTFUL_ENVIRONMENT: 'dev'
@@ -26,5 +26,5 @@ jobs:
       AWS_REGION: ${{ secrets.AWS_REGION }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       REGISTRY: ${{ secrets.REGISTRY }}
-      REPO: ${{ secrets.ECR_REPOSITORY }}
+      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
       TOKEN_RELEASE: ${{ secrets.TOKEN_RELEASE }}
