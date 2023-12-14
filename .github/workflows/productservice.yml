@@ -19,7 +19,7 @@ on:
         required: true
       REGISTRY:
         required: true
-      REPO:
+      ECR_REPOSITORY:
         required: true          
       SONAR_TOKEN:
         required: true
@@ -197,7 +197,7 @@ jobs:
                 with:
                   registry: ${{ secrets.REGISTRY }}
                   repo: ${{ secrets.ECR_REPOSITORY }}
-                  tags: product-service-v${{ github.run_number }}
+                  tags: product-service--${{ inputs.CI_ENV }}-v${{ github.run_number }}
                   daemon_off: false
                   dockerfile: ./Dockerfile
                   context: ./
