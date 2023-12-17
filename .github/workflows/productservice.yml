@@ -24,7 +24,9 @@ on:
       SONAR_TOKEN:
         required: true
       TOKEN_RELEASE:
-        required: true   
+        required: true
+      SLACK_WEBHOOK_URL:
+        required: true           
 
 env:
   CODE_DIR: ./products-service
@@ -71,10 +73,7 @@ jobs:
               -Dsonar.jacoco.reportsPathtarjet/jacoco.exec
               -Dsonar.java.checkstyle.reportPath=target/checkstyle-result.xml
               -Dsonar.exclusions=**/Dockerfile
- 
-      - name: Revisar archivos 
-        run: tree       
-      
+
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
         uses: sonarsource/sonarqube-quality-gate-action@master
@@ -84,6 +83,16 @@ jobs:
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Slack Notification
+        uses: act10ns/slack@v1
+        with: 
+          status: ${{ job.status }}
+          steps: ${{toJson(steps)}}
+          channel: '#proyecto-ort'
+          message: Proyecto-Frontend ${{ github.job}} en ${{ inputs.CI_ENV }} branch fue ${{ job.status }}
+        if: always() 
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}          
 
   FUNTIONAL_TESTING:
     needs:  Analysis
@@ -138,7 +147,16 @@ jobs:
           else
               echo "Spring Boot App not running."
           fi
-
+    - name: Slack Notification
+      uses: act10ns/slack@v1
+      with: 
+        status: ${{ job.status }}
+        steps: ${{toJson(steps)}}
+        channel: '#proyecto-ort'
+        message: Proyecto-Frontend ${{ github.job}} en ${{ inputs.CI_ENV }} branch fue ${{ job.status }}
+      if: always() 
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   Release:
     needs:  FUNTIONAL_TESTING
     runs-on: ubuntu-latest
@@ -174,31 +192,52 @@ jobs:
           asset_name: products-service-${{ inputs.CI_ENV }}.jar
           asset_content_type: application/java-archive
 
+      - name: Slack Notification
+        uses: act10ns/slack@v1
+        with: 
+          status: ${{ job.status }}
+          steps: ${{toJson(steps)}}
+          channel: '#proyecto-ort'
+          message: Proyecto-Frontend ${{ github.job}} en ${{ inputs.CI_ENV }} branch fue ${{ job.status }}
+        if: always() 
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}          
+
   BUILD_AND_PUBLISH:
-              needs:  Release
-              runs-on: ubuntu-latest
-              defaults:
-                run:
-                  working-directory: ${{ env.CODE_DIR }}
-              steps:
-              - name: Code checkout 
-                uses: actions/checkout@v4
-          
-              - name: Setup AWS creds
-                uses: aws-actions/configure-aws-credentials@v4
-                with:
-                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-                  aws-region: ${{ secrets.AWS_REGION }}
+      needs:  Release
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ${{ env.CODE_DIR }}
+      steps:
+      - name: Code checkout 
+        uses: actions/checkout@v4
+  
+      - name: Setup AWS creds
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
 ##
-              - name: Upload image to ECR
-                uses: appleboy/docker-ecr-action@master        
-                with:
-                  registry: ${{ secrets.REGISTRY }}
-                  repo: ${{ secrets.ECR_REPOSITORY }}
-                  tags: product-service-${{ inputs.CI_ENV }}.v${{ github.run_number }}
-                  daemon_off: false
-                  dockerfile: ./Dockerfile
-                  context: ./
+      - name: Upload image to ECR
+        uses: appleboy/docker-ecr-action@master        
+        with:
+          registry: ${{ secrets.REGISTRY }}
+          repo: ${{ secrets.ECR_REPOSITORY }}
+          tags: product-service-${{ inputs.CI_ENV }}.v${{ github.run_number }}
+          daemon_off: false
+          dockerfile: ./Dockerfile
+          context: ./
+      - name: Slack Notification
+        uses: act10ns/slack@v1
+        with: 
+          status: ${{ job.status }}
+          steps: ${{toJson(steps)}}
+          channel: '#proyecto-ort'
+          message: Proyecto-Frontend ${{ github.job}} en ${{ inputs.CI_ENV }} branch fue ${{ job.status }}
+        if: always() 
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}                  
 
