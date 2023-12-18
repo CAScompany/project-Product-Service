@@ -248,11 +248,6 @@ jobs:
   Deploy-EKS:
     needs: BUILD_AND_PUBLISH
     runs-on: ubuntu-latest
-    defaults:
-      run: 
-        shell: bash
-        working-directory: ./.github/EKS/
-
     steps:
 
       - name: Checkout source code
@@ -270,9 +265,7 @@ jobs:
         run: aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.EKS_CLUSTER }}
 
       - name: Login to ECR
-        run: | 
-          cd $GITHUB_WORKSPACE/.kube
-          kubectl create secret docker-registry regcred --docker-server ${{secrets.REGISTRY}} --docker-password=$(aws ecr get-login-password)
+        run: kubectl create secret docker-registry regcred --docker-server ${{secrets.REGISTRY}} --docker-username=AWS --docker-password=$(aws ecr get-login-password)
 
       - name: Deploy Helm
         uses: bitovi/github-actions-deploy-eks-helm@v1.2.8
@@ -282,7 +275,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           cluster-name: ${{ secrets.EKS_CLUSTER }}
 #          config-files: .github/values/dev.yaml
-          chart-path: ./productcharts
+          chart-path: ./.github/EKS/productcharts
           namespace: producion
           values: appimage=${{secrets.REGISTRY}}/${{secrets.ECR_REPOSITORY}},apptag=product-service-v${{ github.run_number }},${{ inputs.CI_ENV }}
           name: product-service
