@@ -282,7 +282,7 @@ jobs:
 #          config-files: .github/values/dev.yaml
           chart-path: ./productcharts
           namespace: producion
-          values: appimage=${{secrets.REGISTRY}}/${{secrets.ECR_REPOSITORY}},apptag=product-service-${{ inputs.CI_ENV }}.v${{ github.run_number }}
+          values: appimage=${{secrets.REGISTRY}}/${{secrets.ECR_REPOSITORY}},apptag=product-service-v${{ github.run_number }},${{ inputs.CI_ENV }}
           name: product-service
       - name: Slack Notification
         uses: act10ns/slack@v1
