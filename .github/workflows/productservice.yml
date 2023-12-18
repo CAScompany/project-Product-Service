@@ -228,7 +228,7 @@ jobs:
         with:
           registry: ${{ secrets.REGISTRY }}
           repo: ${{ secrets.ECR_REPOSITORY }}
-          tags: product-service-${{ inputs.CI_ENV }}.v${{ github.run_number }}
+          tags: product-service-${{ inputs.CI_ENV }}-v${{ github.run_number }}
           daemon_off: false
           dockerfile: ./Dockerfile
           context: ./
@@ -238,7 +238,7 @@ jobs:
           status: ${{ job.status }}
           steps: ${{toJson(steps)}}
           channel: '#proyecto-ort'
-          message: Proyecto-Frontend ${{ github.job}} en ${{ inputs.CI_ENV }} branch fue ${{ job.status }}
+          message: Proyecto-Product ${{ github.job}} en ${{ inputs.CI_ENV }} branch fue ${{ job.status }}
         if: always() 
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}                  
